@@ -1,0 +1,33 @@
+:root,
+html,
+body {
+    height: 100%;
+    width: 100%;
+    background-color: gray;
+}
+.game-container {
+	background-color: white;
+	padding: 15px;
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: repeat(3, 1fr);
+	width: min(400px, 40vw);
+	aspect-ratio: 1 / 1;
+	border-radius: 15px;
+	margin: auto;
+	margin-top: auto;
+}
+.row {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-template-rows: 1fr;
+}
+.cell {
+	border: 2px solid rgb(100,100,100,0.4);
+}
+.playerSelect {
+	background-color: blue;
+}
+.computerSelect {
+	background-color: red;
+}
