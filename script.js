@@ -1,3 +1,7 @@
+const gameOverModal = document.querySelector('.gameOver-modal');
+const newGameButton = document.querySelector('.newGame-button');
+let playerTurn = true;
+
 const gameBoard = (() => {
     const gameContainer = document.querySelector('.game-container');
     const boardArray = [];
@@ -38,21 +42,22 @@ const gameBoard = (() => {
 gameBoard.generate();
 
 const game = (() => {
-    let playerTurn = true;
-
     gameBoard.gameContainer.addEventListener('click', (event) => {
-        if(checkStatus(event.target) === 'empty') {
+        if (event.target.className !== 'cell') { //reject touch event if not on cell object
+            return;
+        }
+        if(checkStatus(event.target) === 'empty' && gameOverModal.dataset.shown === 'false') {
             if (playerTurn) {
                 updateStatus(event.target, 'player1');
                 event.target.innerHTML = player1.marker;
-                playerTurn = !playerTurn;
             } else {
                 updateStatus(event.target, 'player2');
                 event.target.innerHTML = player2.marker;
-                playerTurn = !playerTurn;
             }
+            playerTurn = !playerTurn;
+            checkWin();
         }
-        checkWin();
+        event.stopPropagation;
     });
     
     function updateStatus(clickedCell, newStatus) {
@@ -72,24 +77,32 @@ const game = (() => {
             return('empty');
         }
     }
+
+    return{playerTurn};
 })();
-
-
-
 
 function checkWin() {
     const board = gameBoard.boardArray;
     for (let i = 0; i < 3; i++) {
         if (board[i][0].status !== null && board[i][1].status === board[i][0].status && board[i][2].status === board[i][0].status) {
             console.log('Win by row');
-            gameBoard.generate();
+            gameOverModal.style.animation = 'slideIn 1s forwards';
+            gameOverModal.dataset.shown = 'true';
         }
         if (board[0][i].status !== null && board[1][i].status === board[0][i].status && board[2][i].status === board[0][i].status) {
             console.log('Win by column');
-            gameBoard.generate();
+            gameOverModal.style.animation = 'slideIn 1s forwards';
+            gameOverModal.dataset.shown = 'true';
         }
     }
 }
+
+newGameButton.addEventListener('click', () => {
+    gameOverModal.style.animation = 'slideOut 1s forwards';
+    gameBoard.generate();
+    gameOverModal.dataset.shown = 'false';
+    playerTurn = true;
+});
 
 
 
