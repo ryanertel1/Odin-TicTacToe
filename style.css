@@ -24,10 +24,11 @@ body {
 }
 .cell {
 	border: 2px solid rgb(100,100,100,0.4);
-}
-.playerSelect {
-	background-color: blue;
-}
-.computerSelect {
-	background-color: red;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 10vw;
+	color: rgb(50,50,50);
+	text-shadow: 2px 7px 5px rgba(0,0,0,0.3), 
+    0px -4px 10px rgba(255,255,255,0.3);
 }
