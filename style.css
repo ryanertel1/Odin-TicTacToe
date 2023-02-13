@@ -11,6 +11,46 @@ body {
 		padding: 0;
 		overflow: hidden;
 }
+body {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.player-selection {
+	display: grid;
+	grid-template-rows: repeat(2, 1fr);
+	grid-template-columns: 1fr;
+	justify-content: center;
+	align-items: center;
+	align-content: center;
+	justify-items: center;
+	padding: 40px;
+	align-self: center;
+	grid-gap: 20px;
+}
+.player1-container,
+.player2-container {
+	display: grid;
+	grid-template-rows: repeat(2, 1fr);
+	grid-template-columns: 1fr, 1fr, 60px;
+	grid-gap: 8px;
+}
+.player1-container>text,
+.player2-container>text {
+	font-size: 1.3rem;
+}
+.player1-container>label,
+.player2-container>label {
+	color: rgb(40,40,40);
+}
+.player-name {
+	grid-column: 2 / 3;
+	border-radius: 5px;
+	border: none;
+}
+.player-type {
+	grid-column: 3 / 4;
+}
 .game-container {
 	background-color: white;
 	padding: 15px;
@@ -20,8 +60,6 @@ body {
 	width: min(400px, 40vw);
 	aspect-ratio: 1 / 1;
 	border-radius: 15px;
-	margin: auto;
-	margin-top: auto;
 }
 .row {
 	display: grid;
@@ -49,6 +87,7 @@ body {
 	justify-content: space-between;
 	align-items: center;
 	background-color: #5b7c99;
+	box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 @keyframes slideIn {
 	from {bottom: calc(var(--modal-height) * -1)}
@@ -70,6 +109,7 @@ body {
 	height: 40px;
 	border-radius: 15px;
 	border: none;
+	cursor: grab;
 }
 .newGame-button:hover {
 	background-color: #ff8c42;

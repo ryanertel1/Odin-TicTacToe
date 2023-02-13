@@ -1,6 +1,22 @@
 const gameOverModal = document.querySelector('.gameOver-modal');
+const gameOverText = document.querySelector('.gameOver-text');
 const newGameButton = document.querySelector('.newGame-button');
 let playerTurn = true;
+
+const player1Name = document.querySelector('.player1-name');
+const player1Type = document.querySelector('.player1-type');
+const player2Name = document.querySelector('.player2-name');
+const player2Type = document.querySelector('.player2-type');
+player1Name.value = 'Player';
+player2Name.value = 'Bob';
+
+const playerGenerator = (() => {
+    function playerFactory(type, name, marker) {
+        return{type, name, marker};
+    }
+    player1 = playerFactory('human', player1Name.value, 'X');
+    player2 = playerFactory('computer', player2Name.value, 'O');
+})();
 
 const gameBoard = (() => {
     const gameContainer = document.querySelector('.game-container');
@@ -9,12 +25,6 @@ const gameBoard = (() => {
     function cellFactory(row, column, status) {
         return{row, column, status};
     }
-    function playerFactory(type, name, marker) {
-        return{type, name, marker};
-    }
-
-    player1 = playerFactory('human', 'Ryan', 'X');
-    player2 = playerFactory('computer', 'AI:Bob', 'O');
 
     function generate() {
         while(gameContainer.lastChild) {
@@ -48,10 +58,10 @@ const game = (() => {
         }
         if(checkStatus(event.target) === 'empty' && gameOverModal.dataset.shown === 'false') {
             if (playerTurn) {
-                updateStatus(event.target, 'player1');
+                updateStatus(event.target, player1.name);
                 event.target.innerHTML = player1.marker;
             } else {
-                updateStatus(event.target, 'player2');
+                updateStatus(event.target, player2.name);
                 event.target.innerHTML = player2.marker;
             }
             playerTurn = !playerTurn;
@@ -85,14 +95,14 @@ function checkWin() {
     const board = gameBoard.boardArray;
     for (let i = 0; i < 3; i++) {
         if (board[i][0].status !== null && board[i][1].status === board[i][0].status && board[i][2].status === board[i][0].status) {
-            console.log('Win by row');
             gameOverModal.style.animation = 'slideIn 1s forwards';
             gameOverModal.dataset.shown = 'true';
+            gameOverText.innerHTML = `${board[i][0].status} WINS`;
         }
         if (board[0][i].status !== null && board[1][i].status === board[0][i].status && board[2][i].status === board[0][i].status) {
-            console.log('Win by column');
             gameOverModal.style.animation = 'slideIn 1s forwards';
             gameOverModal.dataset.shown = 'true';
+            gameOverText.innerHTML = `${board[i][0].status} WINS`;
         }
     }
 }
@@ -103,6 +113,13 @@ newGameButton.addEventListener('click', () => {
     gameOverModal.dataset.shown = 'false';
     playerTurn = true;
 });
+
+player1Name.addEventListener('input', (event) => {
+    player1.name = event.target.value;
+})
+player2Name.addEventListener('input', (event) => {
+    player2.name = event.target.value;
+})
 
 
 
