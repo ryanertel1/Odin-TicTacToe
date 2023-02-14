@@ -15,7 +15,8 @@ const playerGenerator = (() => {
         return{type, name, marker};
     }
     player1 = playerFactory('human', player1Name.value, 'X');
-    player2 = playerFactory('computer', player2Name.value, 'O');
+    player2 = playerFactory('CPU', player2Name.value, 'O');
+    return{player1, player2};
 })();
 
 const gameBoard = (() => {
@@ -67,6 +68,21 @@ const game = (() => {
             playerTurn = !playerTurn;
             checkWin();
         }
+        let escapeIter = 0;
+        while(!playerTurn && player2.type === 'CPU' && escapeIter < 1000) {
+            let randomI = Math.floor(Math.random() * 2);
+            let randomJ = Math.floor(Math.random() * 2);
+            let clickedCell = document.querySelector(`[data-index= '${randomI}${randomJ}']`);
+            if(clickedCell.innerHTML === '' && gameOverModal.dataset.shown === 'false') {
+                updateStatus(clickedCell);
+                clickedCell.innerHTML = player2.marker;
+                playerTurn = !playerTurn;
+                checkWin();
+            }
+            console.log(escapeIter);
+            escapeIter++;
+        }
+        escapeIter = 0;
         event.stopPropagation;
     });
     
@@ -93,17 +109,48 @@ const game = (() => {
 
 function checkWin() {
     const board = gameBoard.boardArray;
+
+    if (board[0][0].status !== null && board[1][1].status === board[0][0].status && board[2][2].status === board[0][0].status) {
+        gameOverModal.style.animation = 'slideIn 1s forwards';
+        gameOverModal.dataset.shown = 'true';
+        gameOverText.innerHTML = `${board[0][0].status} WINS`;
+        return;  
+    }
+    if (board[2][0].status !== null && board[1][1].status === board[2][0].status && board[0][2].status === board[2][0].status) {
+        gameOverModal.style.animation = 'slideIn 1s forwards';
+        gameOverModal.dataset.shown = 'true';
+        gameOverText.innerHTML = `${board[2][0].status} WINS`;
+        return;       
+    }
     for (let i = 0; i < 3; i++) {
         if (board[i][0].status !== null && board[i][1].status === board[i][0].status && board[i][2].status === board[i][0].status) {
             gameOverModal.style.animation = 'slideIn 1s forwards';
             gameOverModal.dataset.shown = 'true';
             gameOverText.innerHTML = `${board[i][0].status} WINS`;
+            return;
         }
         if (board[0][i].status !== null && board[1][i].status === board[0][i].status && board[2][i].status === board[0][i].status) {
             gameOverModal.style.animation = 'slideIn 1s forwards';
             gameOverModal.dataset.shown = 'true';
-            gameOverText.innerHTML = `${board[i][0].status} WINS`;
+            gameOverText.innerHTML = `${board[0][i].status} WINS`;
+            return;
         }
+    }
+    let emptyCell = false;
+    outerLoop:
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            if(board[i][j].status === null) {
+                emptyCell = true;
+                break outerLoop;
+            }
+        }
+    }
+    if (emptyCell === false) {
+        gameOverModal.style.animation = 'slideIn 1s forwards';
+        gameOverModal.dataset.shown = 'true';
+        gameOverText.innerHTML = 'It\'s a Tie'; 
+        return;
     }
 }
 
@@ -115,11 +162,27 @@ newGameButton.addEventListener('click', () => {
 });
 
 player1Name.addEventListener('input', (event) => {
-    player1.name = event.target.value;
-})
+    playerGenerator.player1.name = player2Name.value;
+    gameBoard.generate();
+    gameOverModal.dataset.shown = 'false';
+    playerTurn = true;
+});
 player2Name.addEventListener('input', (event) => {
-    player2.name = event.target.value;
-})
+    playerGenerator.player2.name = player2Name.value;
+    gameBoard.generate();
+    gameOverModal.dataset.shown = 'false';
+    playerTurn = true;
+});
+player2Type.addEventListener('input', () => {
+    if (player2Type.checked) {
+        playerGenerator.player2.type = 'CPU';
+    } else {
+        playerGenerator.player2.type = 'human';
+    }
+    gameBoard.generate();
+    gameOverModal.dataset.shown = 'false';
+    playerTurn = true;
+});
 
 
 
