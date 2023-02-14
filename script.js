@@ -70,8 +70,9 @@ const game = (() => {
         }
         let escapeIter = 0;
         while(!playerTurn && player2.type === 'CPU' && escapeIter < 1000) {
-            let randomI = Math.floor(Math.random() * 2);
-            let randomJ = Math.floor(Math.random() * 2);
+            let randomIndex = Math.floor(Math.random() * 8);
+            let randomI = randomIndex % 3;
+            let randomJ = Math.floor(randomIndex / 3);
             let clickedCell = document.querySelector(`[data-index= '${randomI}${randomJ}']`);
             if(clickedCell.innerHTML === '' && gameOverModal.dataset.shown === 'false') {
                 updateStatus(clickedCell);
